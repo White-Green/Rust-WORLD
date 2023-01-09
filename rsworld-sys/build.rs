@@ -39,6 +39,7 @@ fn generate_bindgen(world_src_dir: impl AsRef<Path>) {
         .fold(bindgen::builder(), |builder, &entry| builder.header(world_header_dir.join(entry).with_extension("h").to_str().unwrap()))
         .clang_arg(format!("-I{}", world_src_dir.display()))
         .clang_arg("-fparse-all-comments")
+        .derive_copy(false)
         .parse_callbacks(Box::new(Cb))
         .generate().unwrap()
         .write_to_file(format!("{}/bindgen.rs", env::var("OUT_DIR").unwrap()))

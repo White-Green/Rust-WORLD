@@ -43,6 +43,14 @@ impl ForwardRealFFT {
     }
 }
 
+impl Drop for ForwardRealFFT {
+    fn drop(&mut self) {
+        unsafe {
+            DestroyForwardRealFFT(self);
+        }
+    }
+}
+
 impl HarvestOption {
     pub fn new() -> Self {
         unsafe {
@@ -63,6 +71,14 @@ impl InverseComplexFFT {
     }
 }
 
+impl Drop for InverseComplexFFT {
+    fn drop(&mut self) {
+        unsafe {
+            DestroyInverseComplexFFT(self);
+        }
+    }
+}
+
 impl InverseRealFFT {
     pub fn new(fft_size: c_int) -> Self {
         unsafe {
@@ -73,12 +89,28 @@ impl InverseRealFFT {
     }
 }
 
+impl Drop for InverseRealFFT {
+    fn drop(&mut self) {
+        unsafe {
+            DestroyInverseRealFFT(self);
+        }
+    }
+}
+
 impl MinimumPhaseAnalysis {
     pub fn new(fft_size: c_int) -> Self {
         unsafe {
             let mut value = MaybeUninit::uninit();
             InitializeMinimumPhaseAnalysis(fft_size, value.as_mut_ptr());
             value.assume_init()
+        }
+    }
+}
+
+impl Drop for MinimumPhaseAnalysis {
+    fn drop(&mut self) {
+        unsafe {
+            DestroyMinimumPhaseAnalysis(self);
         }
     }
 }
@@ -102,6 +134,14 @@ impl WorldSynthesizer {
                 value.as_mut_ptr(),
             );
             value.assume_init()
+        }
+    }
+}
+
+impl Drop for WorldSynthesizer {
+    fn drop(&mut self) {
+        unsafe {
+            DestroySynthesizer(self);
         }
     }
 }
